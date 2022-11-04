@@ -15,6 +15,7 @@ In this implementation of a general cellular automaton, the state of any given c
 Periodic boundary conditions are used, which assumes that edges of the game board wrap around to the opposite edge.
 
 An example run of Conway's Game of Life using Moore neighbourhood (50 generations), is shown below:
+
 `python3 ./cellular_automaton.py`
 
 ![](https://github.com/AaronYong179-FunProjects/CellularAutomaton/blob/main/img/GoLDemo.gif)

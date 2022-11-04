@@ -1,5 +1,4 @@
 # CellularAutomaton
-
 A Pythonic cellular automaton implementation.
 
 ---

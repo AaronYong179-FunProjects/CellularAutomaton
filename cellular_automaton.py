@@ -23,7 +23,7 @@ adventure. Additional simulations to be toyed with!
 def init_state(width, height):
     return np.zeros((height, width))
 
-def random_state(width, height):
+def random_state(width, height, p_dead=0.50):
     """ Creates a random soup of life.
 
     Each cell has a 50% probability of spawning with life. 
@@ -32,7 +32,7 @@ def random_state(width, height):
     for row in range(height):
         for col in range(width):
             rand = random.random()
-            state[row,col] = 1 if rand >= 0.50 else 0
+            state[row,col] = 1 if rand >= p_dead else 0
     return state
 
 ###############################################

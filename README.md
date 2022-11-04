@@ -1,6 +1,7 @@
 # CellularAutomaton
 
 A Pythonic cellular automaton implementation.
+
 ---
 ## cellular_automaton.py
 _"A cellular automaton is a collection of cells arranged in a grid ... such that each cell changes state as a function of time, according to a defined set of rules driven by the states of the neighbouring cells. ([From TechTarget](https://www.techtarget.com/searchenterprisedesktop/definition/cellular-automaton))"_

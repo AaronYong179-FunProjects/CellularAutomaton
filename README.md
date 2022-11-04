@@ -22,16 +22,19 @@ An example run of Conway's Game of Life using Moore neighbourhood (50 generation
 Patterns contained within a `.txt` file can be loaded into the simulation as well. A few files with sample patterns are located in the `/patterns/` folder.
 
 An example of a [glider](https://en.wikipedia.org/wiki/Glider_(Conway%27s_Life)) is shown below:
+
 `python3 ./cellular_automaton.py -p "./patterns/glider.txt"`
 
 ![](https://github.com/AaronYong179-FunProjects/CellularAutomaton/blob/main/img/gliderDemo.gif)
 
 A much more impressive example is the [Gosper Glider Gun](https://conwaylife.com/wiki/Gosper_glider_gun), spawning two gliders within 50 generations.
+
 `python3 ./cellular_automaton.py -p "./patterns/gosper_glider_gun.txt"`
 
 ![](https://github.com/AaronYong179-FunProjects/CellularAutomaton/blob/main/img/gggDemo.gif)
 
 A final example, a rocket ship from the [Day and Night](https://en.wikipedia.org/wiki/Day_and_Night_(cellular_automaton)) cellular automaton:
+
 `python3 ./cellular_automaton.py -rc "day_and_night" -p "./patterns/rocket_ship.txt"`
 
 ![](https://github.com/AaronYong179-FunProjects/CellularAutomaton/blob/main/img/rocketDemo.gif)

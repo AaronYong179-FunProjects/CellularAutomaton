@@ -117,9 +117,17 @@ def game_of_life_ruleset(state, coord, neighbour_count):
     elif not cell and neighbour_count == 3:
         state[coord] = 1
 
+def day_and_night_ruleset(state, coord, neighbour_count):
+    cell = state[coord]
+    if cell and neighbour_count not in (3, 4, 6, 7, 8):
+        state[coord] = 0
+    elif not cell and neighbour_count in (3, 6, 7, 8):
+        state[coord] = 1
+
 ## Dictionary for all cell fate rules
 RULEBOOK_CELL_FATE = {
-    "game_of_life": game_of_life_ruleset
+    "game_of_life": game_of_life_ruleset,
+    "day_and_night": day_and_night_ruleset
 }
 
 ############################################

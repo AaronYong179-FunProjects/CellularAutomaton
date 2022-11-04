@@ -1,9 +1,20 @@
+# python3
+# @author AaronYong179
+
 import random
 import numpy as np
 import copy
 import cv2
+import argparse
 
-# https://robertheaton.com/2018/07/20/project-2-game-of-life/
+""" 
+This mini-project sprung to life after reading Robert Heaton's 
+list of coding projects for inspiration. His website can be found at
+https://robertheaton.com/2018/07/20/project-2-game-of-life/
+
+Implementing the basic Game of Life itself was a fun lazy afternoon coding 
+adventure. Additional simulations to be toyed with!
+"""
 
 #####################################
 ## Random soup generator functions ##
@@ -41,7 +52,7 @@ def get_neighbours_Moore(index, state):
     """ Returns the coordinates all cells in a Moore neighbourhood. 
     
     The Moore neighbourhood is defined as the eight cells surronding a 
-    central cell.
+    central cell. Periodic boundary conditions are implemented.
     """
     row, col = index
     height, width = state.shape
@@ -54,6 +65,33 @@ def get_neighbours_Moore(index, state):
                 ((row + row_shift) % height, (col + col_shift) % width)
             )
     return neighbours
+
+def get_neighbours_Von_Neumann(index, state):
+    row, col = index
+    height, width = state.shape
+    neighbours = []
+    for row_shift in range(-2, 3):
+        for col_shift in range(-2, 3):
+            if np.count_nonzero([row_shift, col_shift]) == 1:
+                neighbours.append(
+                    ((row + row_shift) % height, (col + col_shift) % width)
+                )
+    ## for small matrices, there is the risk of overlapping neighbours
+    ## although this should not cause any issues, for clarity, duplicate 
+    ## neighbours are simply discarded
+    return list(set(neighbours))
+
+def _print_cell_value(indices, state):
+    """ Debug tool. """
+    for index in indices:
+        print(state[index])
+
+
+## Dictionary for all neighbour count rules
+RULEBOOK_NEIGHBOUR_COUNT = {
+    "Moore" : get_neighbours_Moore,
+    "Von_Neumann" : get_neighbours_Von_Neumann
+} 
 
 #######################################
 ## Rulesets determining fate of cell ##
@@ -79,19 +117,16 @@ def game_of_life_ruleset(state, coord, neighbour_count):
     elif not cell and neighbour_count == 3:
         state[coord] = 1
 
-RULEBOOK = {
-    "game_of_life" : 
-    {
-        "neighbour_count":  get_neighbours_Moore,
-        "ruleset": game_of_life_ruleset
-    }
+## Dictionary for all cell fate rules
+RULEBOOK_CELL_FATE = {
+    "game_of_life": game_of_life_ruleset
 }
 
 ############################################
 ## Functions in charge of running the sim ##
 ############################################
 
-def calc_next_state(state, rule):
+def calc_next_state(state, rule_neighbour_count, rule_cell_fate):
     """ Calculates the next state given the cellular automaton variant used.
 
     Cellular automatons implemented here differ in two main areas: 
@@ -104,8 +139,8 @@ def calc_next_state(state, rule):
     """
 
     # extract celular automaton rules
-    count_fn = RULEBOOK[rule]["neighbour_count"]
-    ruleset_fn = RULEBOOK[rule]["ruleset"]
+    count_fn = RULEBOOK_NEIGHBOUR_COUNT[rule_neighbour_count]
+    ruleset_fn = RULEBOOK_CELL_FATE[rule_cell_fate]
 
     next_state = copy.deepcopy(state)
     height, width = state.shape
@@ -140,12 +175,12 @@ def render(state, refresh_rate):
     cv2.imshow("sim", state)
     return cv2.waitKey(refresh_rate)
 
-def run_sim(sim_name, size=50, refresh_rate=100, pattern=None):
+def run_sim(rule_neighbour_count, rule_cell_fate,\
+    size, refresh_rate, pattern):
     """ Runs the desired cellular automaton simulation. 
 
     Patterns can be loaded from .txt files as well.
     """
-
     if pattern is None:
         state = random_state(size, size)
     else:
@@ -157,8 +192,17 @@ def run_sim(sim_name, size=50, refresh_rate=100, pattern=None):
         if key_press == ord("q"):
             cv2.destroyAllWindows() # just for cleanliness sake
             break
-        state = calc_next_state(state, sim_name)
+        state = calc_next_state(state, rule_neighbour_count, rule_cell_fate)
 
-run_sim("game_of_life", refresh_rate=75)
+## Handle command-line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("-rn", "--rule_neighbour", default="Moore")
+parser.add_argument("-rc", "--rule_cell", default="game_of_life")
+parser.add_argument("-s", "--size", default=50, type=int)
+parser.add_argument("-hz", "--refresh_rate", default=100, type=int)
+parser.add_argument("-p", "--pattern", default=None)
+
+args = parser.parse_args()
+run_sim(args.rule_neighbour, args.rule_cell, args.size, args.refresh_rate, args.pattern)
 
     
